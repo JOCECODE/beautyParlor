@@ -56,12 +56,50 @@ const Home: NextPage = () => {
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
         <AuthShowcase />
+        <PrismaShowcase />
       </main>
     </>
   );
 };
 
 export default Home;
+
+const PrismaShowcase: React.FC = () => {
+
+  const { data: sessionData } = useSession();
+
+  return (
+    <>
+      {
+        sessionData?.user?.email && (
+          <RoleDisplay email={sessionData.user.email }/>
+        )
+      }
+    </>
+  );
+}
+
+type RoleProps = {
+  email: string
+}
+
+const RoleDisplay: React.FC<RoleProps> = ({email}) => {
+  const userRole= trpc.example.getRole.useQuery({ email: email});
+
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-2">
+        <p className="text-2xl text-blue-500">
+          current user is {email}
+
+        </p>
+        <p className="text-2xl text-blue-500">
+          and i got my role <b>{userRole.data?.role}</b> from Prisma
+        </p>
+
+    </div>
+  )
+}
 
 const AuthShowcase: React.FC = () => {
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
