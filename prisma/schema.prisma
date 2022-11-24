@@ -53,14 +53,24 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
-  role          Role      @default(USER)
+  role          Role          @default(USER)
   image         String?
+  appointments  Appointment[]
   accounts      Account[]
   sessions      Session[]
+}
+
+model Appointment {
+  id         String   @id @default(cuid())
+  customer   User     @relation(fields: [customerId], references: [id])
+  customerId String
+  service    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model VerificationToken {

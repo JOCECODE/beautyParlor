@@ -2,11 +2,17 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { env } from "../env/client.mjs";
 
 import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+
+  const mutation = trpc.appointment.createAppt.useMutation();
+  const handleCreateAppt = async () => {
+    mutation.mutate({service: "haircut"})
+  }
 
   return (
     <>
@@ -19,39 +25,34 @@ const Home: NextPage = () => {
         <h1 className="text-5xl font-extrabold leading-normal text-gray-700 md:text-[5rem]">
           Create <span className="text-purple-300">T3</span> App
         </h1>
-        <p className="text-2xl text-gray-700">This stack uses:</p>
-        <div className="mt-3 grid gap-3 pt-3 text-center md:grid-cols-3 lg:w-2/3">
-          <TechnologyCard
-            name="NextJS"
-            description="The React framework for production"
-            documentation="https://nextjs.org/"
-          />
-          <TechnologyCard
-            name="TypeScript"
-            description="Strongly typed programming language that builds on JavaScript, giving you better tooling at any scale"
-            documentation="https://www.typescriptlang.org/"
-          />
-          <TechnologyCard
-            name="TailwindCSS"
-            description="Rapidly build modern websites without ever leaving your HTML"
-            documentation="https://tailwindcss.com/"
-          />
-          <TechnologyCard
-            name="tRPC"
-            description="End-to-end typesafe APIs made easy"
-            documentation="https://trpc.io/"
-          />
-          <TechnologyCard
-            name="Next-Auth"
-            description="Authentication for Next.js"
-            documentation="https://next-auth.js.org/"
-          />
-          <TechnologyCard
-            name="Prisma"
-            description="Build data-driven JavaScript & TypeScript apps in less time"
-            documentation="https://www.prisma.io/docs/"
-          />
+        
+
+        <button className="rounded-md border border-black bg-violet-50 px-4 py-2 text-xl shadow-lg hover:bg-violet-100"
+          disabled={mutation.isLoading} onClick={handleCreateAppt}
+        >
+          create appointment
+        </button>
+
+        <div>
+          {mutation.isLoading ? (
+            <p>creating appointment...</p>
+          ) : (
+            <>
+              {
+                mutation.isError ? (
+                  <div> an error ocurred: {mutation.error.message}</div>
+                ) : null 
+              }
+
+              {
+                mutation.isSuccess ? <div> appointment created!</div> : null
+              }
+
+                
+            </>
+          )}
         </div>
+
         <div className="flex w-full items-center justify-center pt-6 text-2xl text-blue-500">
           {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
         </div>
@@ -63,6 +64,8 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+
 
 const PrismaShowcase: React.FC = () => {
 
@@ -95,6 +98,10 @@ const RoleDisplay: React.FC<RoleProps> = ({email}) => {
         </p>
         <p className="text-2xl text-blue-500">
           and i got my role <b>{userRole.data?.role}</b> from Prisma
+        </p>
+
+        <p className="text-2xl text-blue-500">
+          you {env.NEXT_PUBLIC_ADMIN_EMAIL === email ? "SHOULD" : "SHOULD NOT"} be an ADMIN
         </p>
 
     </div>
