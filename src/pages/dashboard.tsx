@@ -1,44 +1,31 @@
 import { type NextPage } from "next";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import CreateAppointmentButton from "../components/CreateAppointmentButton";
 import { env } from "../env/client.mjs";
+import NavBar from "../components/NavBar";
 
 
 const Dashboard: NextPage = () => {
 
-  const { data: sessionData } = useSession();
-
   return (
     <>
       <div
-        className="container min-h-screen flex flex-col justify-start items-center min-w-full p-2"
+        className="container min-h-screen flex flex-col justify-start items-center gap-2 min-w-full p-2"
       >
         {/* nav */}
-        <div
-          className="container min-w-full flex flex-row justify-end items-center items p-4 bg-gradient-to-br from-orange-300 to-red-300"
-        >
-          <div className="flex flex-row flex-grow-[4] justify-start items-center pl-3">
-            <h2 className=" text-3xl font-bold"> Peaches Beauty</h2>
-          </div>
-          <div className="flex flex-row justify-end items-center flex-grow">
-            <button
-              className="rounded-md border border-black bg-violet-50 px-4 py-2 text-xl shadow-sm hover:bg-violet-100"
-              onClick={()=>signOut({callbackUrl: "/"})}
-            >
-              {sessionData ? "Sign out" : "Sign in"}
-            </button>
-          </div>
-
-        </div>
+        <NavBar />
 
         {/* body */}
         <div
-          className="container h-full w-full flex flex-col justify-start items-center bg-slate-200 p-2"
+          className="container h-full flex flex-col justify-start items-center gap-2 border rounded-lg p-2"
         >
           <PrismaShowcase />
 
           <CreateAppointmentButton />
+
+          <AuthShowcase />
+
 
         </div>
       </div>
@@ -87,3 +74,24 @@ const RoleDisplay: React.FC<RoleProps> = ({email}) => {
     </div>
   )
 }
+
+const AuthShowcase: React.FC = () => {
+  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
+
+  const { data: sessionData } = useSession();
+
+  console.log(sessionData?.user);
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-2">
+      {sessionData && (
+        <p className="text-2xl text-red-300">
+          Logged in as {sessionData?.user?.email}
+        </p>
+      )}
+      {secretMessage && (
+        <p className="text-2xl text-blue-500">{secretMessage}</p>
+      )}
+    </div>
+  );
+};

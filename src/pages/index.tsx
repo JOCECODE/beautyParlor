@@ -7,6 +7,8 @@ import { trpc } from "../utils/trpc";
 
 const Home: NextPage = () => {
   const hello = trpc.example.hello.useQuery({ text: "from Me to You." });
+  const { data: sessionData } = useSession();
+  
 
   return (
     <>
@@ -16,21 +18,25 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="container mx-auto flex min-h-screen flex-row items-center justify-center p-4">
-
         {/* hero */}
         <div className="container mx-auto flex flex-col h-full items-center justify-center">
           <h1 className=" text-5xl font-extrabold text-gray-700">
-            My <span className="text-green-600">Beauty</span> Parlor
+            My <span className="text-orange-300">Beauty</span> Parlor
           </h1>
-          <div className="flex w-full items-center justify-center pt-6 text-2xl text-blue-500">
-          {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
-        </div>
+          <div className="flex w-full items-center justify-center pt-6 text-2xl text-red-300">
+            {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
+          </div>
         </div>
         {/* login */}
         <div className="container mx-auto flex flex-col h-full items-center justify-center p-2">
-
-
-          <AuthShowcase />
+          <div className="flex flex-col items-center justify-center gap-2">
+            <button
+              className="rounded-md border border-black bg-violet-50 px-4 py-2 text-xl shadow-lg hover:bg-violet-100"
+              onClick={sessionData ? () => signOut() : () => signIn(undefined, {callbackUrl: '/dashboard'})}
+            >
+              {sessionData ? "Sign out" : "Sign in"}
+            </button>
+          </div>
         </div>
       </main>
     </>
@@ -38,61 +44,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-
-
-
-
-const AuthShowcase: React.FC = () => {
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
-
-  const { data: sessionData } = useSession();
-
-  console.log(sessionData?.user);
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-2">
-      {sessionData && (
-        <p className="text-2xl text-blue-500">
-          Logged in as {sessionData?.user?.email}
-        </p>
-      )}
-      {secretMessage && (
-        <p className="text-2xl text-blue-500">{secretMessage}</p>
-      )}
-      <button
-        className="rounded-md border border-black bg-violet-50 px-4 py-2 text-xl shadow-lg hover:bg-violet-100"
-        onClick={sessionData ? () => signOut() : () => signIn(undefined, {callbackUrl: '/dashboard'})}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
-};
-
-// type TechnologyCardProps = {
-//   name: string;
-//   description: string;
-//   documentation: string;
-// };
-
-// const TechnologyCard = ({
-//   name,
-//   description,
-//   documentation,
-// }: TechnologyCardProps) => {
-//   return (
-//     <section className="flex flex-col justify-center rounded border-2 border-gray-500 p-6 shadow-xl duration-500 motion-safe:hover:scale-105">
-//       <h2 className="text-lg text-gray-700">{name}</h2>
-//       <p className="text-sm text-gray-600">{description}</p>
-//       <Link
-//         className="m-auto mt-3 w-fit text-sm text-violet-500 underline decoration-dotted underline-offset-2"
-//         href={documentation}
-//         target="_blank"
-//         rel="noreferrer"
-//       >
-//         Documentation
-//       </Link>
-//     </section>
-//   );
-// };
