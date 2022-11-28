@@ -10,18 +10,15 @@ import { prisma } from "../../../server/db/client";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
+  // also include user.role on session
   callbacks: {
     session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.role = user.role
       }
       return session;
     },
-    // redirect({url, baseUrl}) {
-    //   console.log(url);
-    //   return `${baseUrl}/dashboard`
-    // },
-    
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
