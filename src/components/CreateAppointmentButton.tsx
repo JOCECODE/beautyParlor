@@ -7,7 +7,7 @@ const CreateAppointmentButton = () => {
 
   const mutation = trpc.appointment.createAppt.useMutation();
   const handleCreateAppt = async () => {
-    mutation.mutate({service: "haircut"})
+    mutation.mutate({service: "haircut", apptTime: "4:30 PM"})
   }
   return (
       <>
