@@ -19,7 +19,7 @@ export const apptRouter = router({
       });
       return appointment;
     }),
-    getAllAppts: protectedProcedure.input(z.object({}).nullish())
+    getAllAppts: protectedProcedure.input(z.object({}))
       .query( ({ctx}) => {
         return ctx.prisma.appointment.findMany();
     }),
