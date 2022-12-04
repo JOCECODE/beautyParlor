@@ -7,7 +7,7 @@ import CustomerQueryDisplay from './CustomerQueryDisplay';
 const AdminView: React.FC = () => {
 
   const [lastClicked, setLastClicked] =useState<string>("appointments");
-
+//                                                                             this references the trpc/router/_app.ts
   const {data: apptData, refetch: refetchAppt, isFetching: isFetchingAppts } = trpc.appointment.getAllAppts.useQuery({}, {
     refetchOnWindowFocus: false,
     // this stops the query from automatically running
@@ -22,8 +22,10 @@ const AdminView: React.FC = () => {
   const handleClick = (query: string) => {
     console.log("i clicked")
     if(query === 'appointments'){
+    // calling on the refetchAppt to refetch the data
       refetchAppt();
     } else {
+      // calling on the refetchUser to refetch the data
       refetchUser();
     }
     setLastClicked(query);
@@ -81,7 +83,8 @@ const AdminView: React.FC = () => {
         )
         )}
       </div> */}
-
+      {/* if lastClicked is exactly 'appointments'  render ApptData Component
+          else render User Data Component   */}
       {
         lastClicked === 'appointments' ? 
           <ApptQueryDisplay queryData={apptData} /> 

@@ -4,9 +4,11 @@ import { trpc } from "../utils/trpc";
 
 
 const CreateAppointmentButton = () => {
-
+// creating an instance of the useMutation() method
   const mutation = trpc.appointment.createAppt.useMutation();
   const handleCreateAppt = async () => {
+    // reference the const mutation.mutate() make service a string "haircut" else it will error
+    // apptTime a string as well or it will error it was declared 
     mutation.mutate({service: "haircut", apptTime: "4:30 PM"})
   }
   return (
