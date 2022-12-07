@@ -5,7 +5,9 @@ import { signIn, signOut, useSession } from "next-auth/react";
 
 import { trpc } from "../utils/trpc";
 
-const Home: NextPage = () => {
+import TableCustomers from "../components/TableCustomers";
+
+const Home: NextPage = (props) => {
   const hello = trpc.example.hello.useQuery({ text: "from Me to You." });
   const { data: sessionData } = useSession();
   
