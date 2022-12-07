@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { trpc } from "../utils/trpc";
-import CustomerQueryDisplay from './CustomerQueryDisplay';
 import NavbarAdmin from './NavbarAdmin';
 import TableCustomers from './TableCustomers';
 
