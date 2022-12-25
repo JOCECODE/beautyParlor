@@ -6,7 +6,11 @@ export const apptRouter = router({
   createAppt: protectedProcedure
     .input(z.object({
       service: z.string(),
-      apptTime: z.string()
+      apptTime: z.string(),
+      firstName: z.string(),
+      lastName: z.string(),      
+      phoneNumber: z.string(),
+      confirmationStatus: z.string(),
     }))
     .mutation(({ctx, input}) => {
       // assert has auth
@@ -14,7 +18,11 @@ export const apptRouter = router({
         data: {
           customerId: ctx.session.user.id,
           service: input.service,
-          apptTime: input.apptTime
+          apptTime: input.apptTime,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phoneNumber: input.phoneNumber,
+          confirmationStatus: input.confirmationStatus
         }
       });
       return appointment;

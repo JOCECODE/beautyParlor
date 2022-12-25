@@ -36,8 +36,8 @@ const TableCustomers: React.FC<TableCustomersProps> =  ({ queryData }) => {
              
             {/* Name and Phone Number of Client */}
             <div>
-              <div className="font-bold text-sm">H. Williams</div>
-              <div className="text-sm opacity-50">(562) 250-8932</div>
+              <div className="font-bold text-sm">{appt.firstName} {appt.lastName}</div>
+              <div className="text-sm opacity-50">{appt.phoneNumber}</div>
             </div>
           </div>
 
@@ -47,7 +47,7 @@ const TableCustomers: React.FC<TableCustomersProps> =  ({ queryData }) => {
           {appt.service} Today!
           <br/>
           <span className="badge badge-ghost badge-sm">{appt.apptTime}</span>
-          <span className="badge bg-green-500 badge-sm">Confirmed</span>
+          <span className="badge bg-green-500 badge-sm">{appt.confirmationStatus}</span>
         </td>
         
       </tr>
