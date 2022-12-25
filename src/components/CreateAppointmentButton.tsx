@@ -20,7 +20,7 @@ const CreateAppointmentButton = () => {
         <button className="rounded-md border border-black bg-violet-600 px-4 py-2 text-xl shadow-sm hover:bg-orange-300 hover:text-black"
           disabled={mutation.isLoading} onClick={handleCreateAppt}
         >
-          create appointment
+          Book Now!
         </button>
         <div>
         {mutation.isLoading ? (
