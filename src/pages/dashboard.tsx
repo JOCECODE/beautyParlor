@@ -1,10 +1,9 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
-import NavBar from "../components/NavBar";
 import AdminView from "../components/AdminView";
 import UserView from "../components/UserView";
 
-const Dashboard: NextPage = () => {
+const Dashboard: NextPage = (props) => {
   const { data: sessionData } = useSession();
   return (
     <>
@@ -14,7 +13,6 @@ const Dashboard: NextPage = () => {
             className="container min-h-screen flex flex-col justify-start items-center gap-2 min-w-full p-2"
           >
             {/* nav */}
-            <NavBar />
             {/* body */}
             {
               sessionData.user?.role === 'admin' ? <AdminView /> : <UserView />
