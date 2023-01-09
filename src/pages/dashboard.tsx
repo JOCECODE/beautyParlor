@@ -11,7 +11,7 @@ const Dashboard: NextPage = (props) => {
       {
         sessionData && (
           <div
-            className="container min-h-screen flex flex-col justify-start items-center gap-2 min-w-full p-2"
+            className=""
           >
             {/* nav */}
             {/* body */}
