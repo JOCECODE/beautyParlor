@@ -9,19 +9,11 @@ import Loader from "./Loader";
 import Form from "./Form";
 
 const UserView: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-
-  React.useEffect(() => {
-    // simulate a long loading process
-    setTimeout(() => {
-      setLoading(false);
-    }, 3500);
-  }, []);
 
   return (
     <>
     <div className="h-screen w-screen">
-      {loading ? <Loader /> : <Form />}
+     <Form/>
     </div>
     </>
       

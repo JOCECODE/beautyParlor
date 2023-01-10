@@ -21,7 +21,7 @@ const Form: React.FC<Props> = (props) => {
   return (
     <>
     <div className='px-8 '>
-    <img className="mask mask-circle block m-auto px-8 mt-10 mb-8" src={sessionData?.user?.image ? sessionData?.user?.image : "https://placeimg.com/160/160/arch"} />
+    <img className="mask mask-circle block m-auto px-8 mt-10 mb-8" src={sessionData?.user?.image ? `${sessionData?.user?.image}` : "https://placeimg.com/160/160/arch"} />
     <div className='font-bold text-center text-gray-700 text-2xl mb-8'>{sessionData?.user?.email}</div>
     
     <form onSubmit={handleSubmit} className="flex flex-col mt-4">

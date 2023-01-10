@@ -33,10 +33,10 @@ const animation1 = useSpring({
     <div className="flex items-center justify-center h-screen w-screen">
       <animated.div  style={{...animation1}}>
        
-       <p className="text-6xl">Hello </p>
+       <p className="text-6xl">Beauty </p>
      </animated.div>
 
-     <animated.div style={{...animation2}}><p className="text-orange-600 text-6xl ml-2">There!</p></animated.div>
+     <animated.div style={{...animation2}}><p className="text-orange-300 text-6xl ml-2">Parlor</p></animated.div>
     </div>
   )
 }
