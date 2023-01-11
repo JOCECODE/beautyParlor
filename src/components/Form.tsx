@@ -7,6 +7,7 @@ interface Props {
 
 const Form: React.FC<Props> = (props) => {
   const { data: sessionData } = useSession();
+  
   const [formData, setFormData] = React.useState({
     firstName: "",
     lastName: "",
@@ -14,8 +15,6 @@ const Form: React.FC<Props> = (props) => {
     phoneNumber: "",
     address: "",
   });
-
-   const user = trpc.user.getUser.useQuery({ email: `${sessionData?.user?.email}` });
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = event.currentTarget;
@@ -25,14 +24,27 @@ const Form: React.FC<Props> = (props) => {
     });
   }
 
+  
    const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log(formData);
-    console.log(user.data);
+    handleUpdate();
+    console.log("check the database")
     // Do something with the form data, like send it to an API
   }
 
+  const mutation = trpc.user.updateUser.useMutation();
+  const handleUpdate = async () => {
+    mutation.mutate({
+        firstName: formData.firstName, 
+        lastName: formData.lastName, 
+        email: `${formData.email}`, 
+        phoneNumber: formData.phoneNumber, 
+        address: formData.address
+    })
+  }
 
+//  const updateInformation = trpc.user.updateUser.useQuery({ firstName: formData.firstName, lastName: formData.lastName, email: `${formData.email}`, phoneNumber: formData.phoneNumber, address: formData.address});
   return (
     <>
     <div className='px-8 '>
@@ -60,6 +72,8 @@ const Form: React.FC<Props> = (props) => {
       <input 
         type="text" 
         name="phoneNumber"
+        minLength={10}
+        maxLength={10}
         placeholder='(562) 555-5555'  
         onChange={handleChange}
         className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300" 

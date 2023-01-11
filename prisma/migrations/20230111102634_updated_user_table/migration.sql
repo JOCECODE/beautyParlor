@@ -1,13 +1,4 @@
 -- CreateTable
-CREATE TABLE `Example` (
-    `id` VARCHAR(191) NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Account` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
@@ -43,8 +34,12 @@ CREATE TABLE `User` (
     `name` VARCHAR(191) NULL,
     `email` VARCHAR(191) NULL,
     `emailVerified` DATETIME(3) NULL,
-    `role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+    `role` VARCHAR(191) NOT NULL DEFAULT 'user',
     `image` VARCHAR(191) NULL,
+    `firstName` VARCHAR(191) NULL,
+    `lastName` VARCHAR(191) NULL,
+    `phoneNumber` INTEGER NULL,
+    `address` VARCHAR(191) NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -54,7 +49,12 @@ CREATE TABLE `User` (
 CREATE TABLE `Appointment` (
     `id` VARCHAR(191) NOT NULL,
     `customerId` VARCHAR(191) NOT NULL,
+    `firstName` VARCHAR(191) NOT NULL,
+    `lastName` VARCHAR(191) NOT NULL,
+    `phoneNumber` VARCHAR(191) NOT NULL,
+    `confirmationStatus` VARCHAR(191) NOT NULL,
     `service` VARCHAR(191) NOT NULL,
+    `apptTime` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
