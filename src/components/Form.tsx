@@ -32,7 +32,7 @@ const Form: React.FC<Props> = (props) => {
     console.log("check the database")
     // Do something with the form data, like send it to an API
   }
-
+//check createAppointmentButton.tsx to add in the isLoading isError for the front end
   const mutation = trpc.user.updateUser.useMutation();
   const handleUpdate = async () => {
     mutation.mutate({
