@@ -1,22 +1,37 @@
 import React from 'react';
 import { useSession } from "next-auth/react";
-
+import { trpc } from "../utils/trpc";
 interface Props {
   // add any props that your component may need
 }
 
 const Form: React.FC<Props> = (props) => {
   const { data: sessionData } = useSession();
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [phoneNumber, setPhoneNumber] = React.useState('');
-  const [address, setAddress] = React.useState('');
-  
+  const [formData, setFormData] = React.useState({
+    firstName: "",
+    lastName: "",
+    email: sessionData?.user?.email,
+    phoneNumber: "",
+    address: "",
+  });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // add code to handle form submission here
+   const user = trpc.user.getUser.useQuery({ email: `${sessionData?.user?.email}` });
+
+  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = event.currentTarget;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   }
+
+   const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log(formData);
+    console.log(user.data);
+    // Do something with the form data, like send it to an API
+  }
+
 
   return (
     <>
@@ -28,44 +43,41 @@ const Form: React.FC<Props> = (props) => {
       <label htmlFor="firstName" className="block font-bold text-gray-700 text-sm mb-2">First Name</label>
       <input 
         type="text" 
-        id="firstName"
-        placeholder='Sinbad' 
-        value={firstName} 
-        onChange={e => setFirstName(e.target.value)}
+        name="firstName"
+        placeholder='Sinbad'  
+        onChange={handleChange}
         className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300" 
       />
       <label htmlFor="lastName" className="block font-bold text-gray-700 text-sm mb-2 mt-4">Last Name</label>
       <input 
         type="text" 
-        id="lastName"
+        name="lastName"
         placeholder='Morpheus' 
-        value={lastName} 
-        onChange={e => setLastName(e.target.value)}
+        onChange={handleChange}
         className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300" 
       />
       <label htmlFor="phoneNumber" className="block font-bold text-gray-700 text-sm mb-2 mt-4">Phone Number</label>
       <input 
         type="text" 
-        id="phoneNumber"
-        placeholder='(562) 555-5555' 
-        value={phoneNumber} 
-        onChange={e => setPhoneNumber(e.target.value)}
+        name="phoneNumber"
+        placeholder='(562) 555-5555'  
+        onChange={handleChange}
         className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300" 
       />
        <label htmlFor="address" className="block font-bold text-gray-700 text-sm mb-2 mt-4">Address</label>
       <input 
         type="text" 
-        id="address"
-        placeholder='P Sherman 42 Wallaby Way Sydney' 
-        value={address} 
-        onChange={e => setAddress(e.target.value)}
+        name="address"
+        placeholder='P Sherman 42 Wallaby Way Sydney'  
+        onChange={handleChange}
         className="w-full px-3 py-2 text-gray-700 bg-gray-200 rounded-md focus:outline-none focus:shadow-outline-blue focus:border-blue-300" 
       />
       
+       <button className="mt-8 float-right px-4 py-2 bg-orange-500 text-white font-bold rounded-full btn" type="submit">Submit</button>
       
       </form>
         
-            <button className="mt-8 float-right px-4 py-2 bg-orange-500 text-white font-bold rounded-full btn ">Submit</button>
+            
         </div>
 
     </>
