@@ -1,8 +1,8 @@
-const sinbad1: React.FC = () => {
+const sinbad: React.FC = (props) => {
     return(
         <>
-        Sinbad Page 1
+        
         </>
     )
 }
-export default sinbad1;
+export default sinbad;
