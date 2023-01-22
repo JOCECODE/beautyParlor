@@ -48,7 +48,8 @@ updateUser: protectedProcedure
     lastName: z.string(),
     email: z.string().email(),
     phoneNumber: z.string(),
-    address: z.string(), }))
+    address: z.string(), 
+    isUpdated: z.boolean()}))
     .mutation(({ ctx, input}) => {
 
     const updatedUser = ctx.prisma.user.update({
@@ -60,6 +61,7 @@ updateUser: protectedProcedure
     lastName: input.lastName,
     phoneNumber: input.phoneNumber,
     address: input.address,
+    isUpdated: input.isUpdated
   },
       });
       return updatedUser;

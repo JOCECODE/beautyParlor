@@ -1,19 +1,35 @@
 import React from 'react';
 import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
+import { useRouter } from "next/router";
 interface Props {
   // add any props that your component may need
 }
 
 const Form: React.FC<Props> = (props) => {
+  const router = useRouter();
   const { data: sessionData } = useSession();
-  
+    const checker = trpc.user.getUser.useQuery({email: `${sessionData?.user?.email}`});
+  if(checker?.data?.isUpdated === true){
+    router.push("/sinbad");
+  }
+  // const { data: userData, refetch: refetchUser, isFetching: isFetchingUsers} = trpc.user.getUser.useQuery({email: `${sessionData?.user?.email}`}, {
+  //   enabled: false,
+  //   refetchOnWindowFocus: false
+  // })
+  // if(userData){
+  //   console.log(userData)
+  // }
+  // if(userData!) {
+  //   refetchUser();
+  // }
   const [formData, setFormData] = React.useState({
     firstName: "",
     lastName: "",
     email: sessionData?.user?.email,
     phoneNumber: "",
     address: "",
+    isUpdated: true
   });
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -24,13 +40,14 @@ const Form: React.FC<Props> = (props) => {
     });
   }
 
-  
    const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(formData);
     handleUpdate();
-    console.log("check the database")
+    console.log("check the database");
+    console.log(checker.data);
+    router.push("/sinbad");
     // Do something with the form data, like send it to an API
+
   }
 //check createAppointmentButton.tsx to add in the isLoading isError for the front end
   const mutation = trpc.user.updateUser.useMutation();
@@ -40,13 +57,15 @@ const Form: React.FC<Props> = (props) => {
         lastName: formData.lastName, 
         email: `${formData.email}`, 
         phoneNumber: formData.phoneNumber, 
-        address: formData.address
+        address: formData.address,
+        isUpdated: formData.isUpdated
     })
   }
 
 //  const updateInformation = trpc.user.updateUser.useQuery({ firstName: formData.firstName, lastName: formData.lastName, email: `${formData.email}`, phoneNumber: formData.phoneNumber, address: formData.address});
   return (
     <>
+    <div></div>
     <div className='px-8 '>
     <img className="mask mask-circle block m-auto px-8 mt-10 mb-8" src={sessionData?.user?.image ? `${sessionData?.user?.image}` : "https://placeimg.com/160/160/arch"} />
     <div className='font-bold text-center text-gray-700 text-2xl mb-8'>{sessionData?.user?.email}</div>

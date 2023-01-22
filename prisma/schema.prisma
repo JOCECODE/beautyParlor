@@ -57,6 +57,7 @@ model User {
   lastName      String?
   phoneNumber   String?
   address       String?
+  isUpdated     Boolean?      @default(false)
   appointments  Appointment[]
   accounts      Account[]
   sessions      Session[]

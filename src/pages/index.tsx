@@ -3,7 +3,7 @@ import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Loader from "../components/Loader";
-import StartComponent from "../components/startComponent";
+import StartComponent from "../components/StartComponent";
 import React, {useState} from 'react';
 
 const Home: NextPage = (props) => {
