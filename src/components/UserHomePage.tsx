@@ -19,10 +19,12 @@ const UserHomePage: React.FC = () => {
   <div className="drawer-content">
     <label htmlFor="my-drawer" className="btn-ghost drawer-button inline-block"><span className="float-right ml-[78px] text-[29px]">Beauty Parlor</span> <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mt-[14px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg></label>
     {/* <!-- Page content here --> */}
-     {activeClass === 'left' ? <><Left /><Footer/></> : null}
-     {activeClass === 'middle' ? <><Middle/><Footer/></> : null}
-     {activeClass === 'right' ? <><Right /><Footer/></> : null}
+     {activeClass === 'left' ? <Left /> : null}
+     {activeClass === 'middle' ? <Middle/> : null}
+     {activeClass === 'right' ? <Right /> : null}
   {/* <NavbarAdmin/> */}
+  <Footer/>
+
   </div> 
   <div className="drawer-side">
     <label htmlFor="my-drawer" className="drawer-overlay"></label>
