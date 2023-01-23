@@ -1,11 +1,9 @@
-import Navbar from "../components/NavbarAdmin";
-import Drawer from "../components/Drawer";
+import UserHomePage from "../components/UserHomePage";
 
 const sinbad: React.FC = (props) => {
     return(
         <>
-        <Drawer/>
-        <Navbar/>
+        <UserHomePage/>
         </>
     )
 }

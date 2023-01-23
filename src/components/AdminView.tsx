@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { trpc } from "../utils/trpc";
-import NavbarAdmin from './NavbarAdmin';
+import NavbarAdmin from './UserHomePage';
 import TableCustomers from './TableCustomers';
 
 const AdminView: React.FC = () => {

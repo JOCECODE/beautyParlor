@@ -1,7 +1,7 @@
 const Carousel: React.FC = () => {
   return(
     <>
-    
+    <div className='mt-3 text-3xl font-bold text-center'>How It Works</div>
     {/* Carousel */}
     <div className="carousel w-full min-h-[300px]">
   <div id="slide1" className="carousel-item relative w-full">
@@ -34,7 +34,7 @@ const Carousel: React.FC = () => {
     </div>
   </div> */}
 </div>
-<div className='mt-3 text-3xl font-bold text-center'>How It Works</div>
+
 
 
     </>

@@ -3,7 +3,7 @@ import {signOut, useSession} from 'next-auth/react';
 import CreateAppointmentButton from './CreateAppointmentButton';
 import { trpc } from "../utils/trpc";
 import { env } from "../env/client.mjs";
-import NavbarAdmin from './NavbarAdmin';
+import NavbarAdmin from './UserHomePage';
 import NavBar from './NavBar';
 
 const TopTitle: React.FC = () => {
