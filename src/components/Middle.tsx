@@ -1,7 +1,6 @@
-
-
-export default function Middle() {
-  return (
-    <div>Middle</div>
+const Middle: React.FC = () => {
+  return(
+    <></>
   )
 }
+export default Middle;

@@ -1,6 +1,6 @@
 
 
-export default function Left() {
+const Left: React.FC = () => {
     
     let stars = 2;
     let value = stars / 3 * 100;
@@ -26,3 +26,4 @@ export default function Left() {
     </>
   )
 }
+ export default Left;

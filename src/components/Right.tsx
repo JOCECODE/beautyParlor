@@ -1,7 +1,8 @@
-import React from 'react'
-
-export default function Right() {
-  return (
-    <div>Right</div>
+const Right: React.FC = () => {
+  return(
+    <>
+    
+    </>
   )
 }
+export default Right;
