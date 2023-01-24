@@ -6,9 +6,7 @@ interface Props {
 
 }
 
-const Calendar: React.FC<Props> = (props) => {
-
-  const CalendarContainer = styled.div`
+const CalendarContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -51,10 +49,19 @@ const Calendar: React.FC<Props> = (props) => {
   color: #ddd;
   background-color: #f9f9f9;
 }
+.isSelected {
+  color: black;
+  background-color: #00FF00;
+  opacity: .3;
+}
   `;
+
+const Calendar: React.FC<Props> = (props) => {
+
+  
   
   const [currentDate, setCurrentDate] = useState(new Date());
-
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const handlePrevMonth = () => {
     const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
     setCurrentDate(prevMonth);
@@ -65,25 +72,34 @@ const Calendar: React.FC<Props> = (props) => {
     setCurrentDate(nextMonth);
   };
 
+  const handleDayClick = (date:Date) => {
+    // do something with the date here
+    console.log("clicked on: ", date);
+    setSelectedDate(date);
+    console.log(selectedDate);
+  };
+
+
   const renderDays = () => {
     const days = [];
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
     const today = new Date();
     const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
     for (let i = 1; i <= lastDayOfMonth; i++) {
       const date = new Date(currentYear, currentMonth, i);
-      const className = date.getTime() < today.getTime() ? 'gray' : '';
+      const isSelected = date.getTime() === (selectedDate && selectedDate.getTime());
+      const className = date.getTime() < today.getTime() ? 'gray' : isSelected ? 'green' : '';
       days.push(
-        <div key={i} className={`day ${className}`}>
+        <div key={i} className={`day ${className} ${isSelected ? 'isSelected' : ''}`} onClick={() => handleDayClick(date)} onTouchStart={() => handleDayClick(date)}>
           {i}
         </div>
       );
     }
-
     return days;
   };
+
+
 
   return (
     <CalendarContainer>
