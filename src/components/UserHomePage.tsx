@@ -1,6 +1,6 @@
 import React, {MouseEvent} from 'react';
 import Left from "./Left";
-import Middle from "./Middle";
+import Middle from "./Calendar";
 import Right from "./Right";
 import Footer from "./Footer";
 
