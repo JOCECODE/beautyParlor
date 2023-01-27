@@ -1,7 +1,7 @@
 const Right: React.FC = () => {
   return(
     <>
-    
+    Sinbad
     </>
   )
 }
