@@ -10,19 +10,7 @@ const Form: React.FC<Props> = (props) => {
   const router = useRouter();
   const { data: sessionData } = useSession();
     const checker = trpc.user.getUser.useQuery({email: `${sessionData?.user?.email}`});
-  if(checker?.data?.isUpdated === true){
-    router.push("/sinbad");
-  }
-  // const { data: userData, refetch: refetchUser, isFetching: isFetchingUsers} = trpc.user.getUser.useQuery({email: `${sessionData?.user?.email}`}, {
-  //   enabled: false,
-  //   refetchOnWindowFocus: false
-  // })
-  // if(userData){
-  //   console.log(userData)
-  // }
-  // if(userData!) {
-  //   refetchUser();
-  // }
+
   const [formData, setFormData] = React.useState({
     firstName: "",
     lastName: "",
