@@ -8,7 +8,7 @@ interface Props {
 
 const CalendarContainer = styled.div`
   width: 100vw;
-  height: 148vh;
+  height: 159vh;
   display: flex;
   flex-direction: column;
 
@@ -145,7 +145,11 @@ const Calendar: React.FC<Props> = (props) => {
     const day = date.getDay();
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const selectedDay = daysOfWeek[date.getDay()];
-
+ // Check if the clicked day is grayed out
+  const className = date < new Date() ? 'gray' : '';
+  if (className === 'gray') {
+    return; // Do nothing if the day is grayed out
+  }
     // do something with the date here
     setSelectedDay(selectedDay ? selectedDay : "");
     setSelectedDate(date);
@@ -154,63 +158,75 @@ const Calendar: React.FC<Props> = (props) => {
 
   const renderDays = () => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
+  
     // Render the row for days of the week
     const dayOfWeekRow = daysOfWeek.map((day) => (
       <div key={day} className="day">
         {day}
       </div>
     ));
-
+  
     const days = [];
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-
-  const today = new Date(); // Get the current date
-
-  // Determine the number of days in the previous month
-  const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
-  const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
-  const lastDayOfPreviousMonth = new Date(previousYear, previousMonth + 1, 0).getDate();
-
-  // Render empty cells for the days before the first day of the current month
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    const date = new Date(previousYear, previousMonth, lastDayOfPreviousMonth - i);
-    const className = date < today ? 'gray' : '';
-    days.push(
-      <div key={`prev-day-${i}`} className={`day ${className}`}>
-        {/* Display an empty div instead of the number */}
-      </div>
-    );
-  }
-
-  // Render days of the current month
-  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-  for (let i = 1; i <= daysInMonth; i++) {
-    const date = new Date(currentYear, currentMonth, i);
-    const className = selectedDate && date.toDateString() === selectedDate.toDateString() ? 'isSelected' : date < today ? 'gray' : '';
-    days.push(
-      <div key={`current-day-${i}`} className={`day ${className}`} onClick={() => handleDayClick(date)}>
-        {i}
-      </div>
-    );
-  }
-
-  // Render empty cells for the days after the last day of the current month
-  const lastDayOfMonth = new Date(currentYear, currentMonth, daysInMonth).getDay();
-  for (let i = 1; i <= 6 - lastDayOfMonth; i++) {
-    const date = new Date(currentYear, currentMonth + 1, i);
-    const className = date < today ? 'gray' : '';
-    days.push(
-      <div key={`next-day-${i}`} className={`day ${className}`}>
-        {/* Display an empty div instead of the number */}
-      </div>
-    );
-  }
-
-  return [dayOfWeekRow, ...days];
-};
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+  
+    const today = new Date(); // Get the current date
+  
+    // Determine the number of days in the previous month
+    const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+    const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+    const lastDayOfPreviousMonth = new Date(previousYear, previousMonth + 1, 0).getDate();
+  
+    // Render empty cells for the days before the first day of the current month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      const date = new Date(previousYear, previousMonth, lastDayOfPreviousMonth - i);
+      const className = date < today ? 'gray' : '';
+      days.push(
+        <div key={`prev-day-${i}`} className={`day ${className}`}>
+          {/* Display an empty div instead of the number */}
+        </div>
+      );
+    }
+  
+    // Render days of the current month
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(currentYear, currentMonth, i);
+      const className = date < today ? 'gray' : '';
+      const isCurrentDay = date.toDateString() === today.toDateString();
+      const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+      const onClickHandler = isCurrentDay ? undefined : () => handleDayClick(date);
+  
+      days.push(
+        <div
+          key={`current-day-${i}`}
+          className={`day ${className} ${isSelected ? 'green' : ''}`}
+          onClick={onClickHandler}
+          style={isCurrentDay ? { backgroundColor: 'orange' } : isSelected ? { backgroundColor: '#c7ecc5' } : {}}
+        >
+          {i}
+        </div>
+      );
+    }
+  
+    // Render empty cells for the days after the last day of the current month
+    const lastDayOfMonth = new Date(currentYear, currentMonth, daysInMonth).getDay();
+    for (let i = 1; i <= 6 - lastDayOfMonth; i++) {
+      const date = new Date(currentYear, currentMonth + 1, i);
+      const className = date < today ? 'gray' : '';
+      days.push(
+        <div key={`next-day-${i}`} className={`day ${className}`}>
+          {/* Display an empty div instead of the number */}
+        </div>
+      );
+    }
+  
+    return [dayOfWeekRow, ...days];
+  };
+  
+  
+  
 
 const isAppointmentReady = () => {
   return selectedDate !== null && (isHairCutSelected || isHairColorSelected || isHairStyleSelected) && selectedTimeSlot !== '';
