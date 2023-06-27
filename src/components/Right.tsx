@@ -45,7 +45,7 @@ const ContactPage: React.FC<Props> = ({ email }) => {
               type="text"
               readOnly={true}
               id="name"
-              value={`${checker.data?.firstName} ${checker.data?.lastName}`}
+              value={`${checker.data?.firstName}${checker.data?.lastName}`}
               
             />
           </div>
