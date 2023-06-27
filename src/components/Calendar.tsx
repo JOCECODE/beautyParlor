@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { string } from 'zod';
+import { trpc } from "../utils/trpc";
+import { useSession } from "next-auth/react";
 
 interface Props {
   // Optional props here
@@ -84,6 +86,7 @@ const Calendar: React.FC<Props> = (props) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedDay, setSelectedDay] = useState<String | null>(null);
+  const [selectedYear, setSelectedYear] = useState<String | null>(null);
   const [isHairCutSelected, setIsHairCutSelected] = useState(false);
   const [isHairColorSelected, setIsHairColorSelected] = useState(false);
   const [isHairStyleSelected, setIsHairStyleSelected] = useState(false);
@@ -92,43 +95,75 @@ const Calendar: React.FC<Props> = (props) => {
   const [showTimeError, setShowTimeError] = useState(true);
   const [showServiceError, setShowServiceError] = useState(true);
 
+  const { data: sessionData } = useSession();
+  const checker = trpc.user.getUser.useQuery({email: `${sessionData?.user?.email}`});
+
   const handleTimeSlotClick = (timeSlot: string) => {
     setSelectedTimeSlot(timeSlot);
     setShowTimeError(false);
   };
 
+  // const handleHairCutToggle = () => {
+  // if (isHairCutSelected === false) {
+  //   setIsHairCutSelected(true);
+  // }
+  // if (isHairCutSelected === true) {
+  //   setIsHairCutSelected(false);
+    
+  // }
+  // if (isHairCutSelected === false && isHairColorSelected === false && isHairStyleSelected === false) {
+  //   setShowServiceError(true);
+  // }
+  // };
+
+  // const handleHairColorToggle = () => {
+  //   if (isHairColorSelected === false) {
+  //     setIsHairColorSelected(true);
+  //     setShowServiceError(false);
+  //   }
+  //   if (isHairColorSelected === true) {
+  //     setIsHairColorSelected(false);
+      
+  //   }
+  //   if (!isHairCutSelected && !isHairColorSelected && !isHairStyleSelected) {
+  //     setShowServiceError(true);
+  //   }
+  // };
+
+  // const handleHairStyleToggle = () => {
+  //   if (isHairStyleSelected === false) {
+  //     setIsHairStyleSelected(true);
+  //     setShowServiceError(false);
+  //   }
+  //    if (isHairStyleSelected === true) {
+  //     setIsHairStyleSelected(false);
+      
+  //   }
+  //   if (!isHairCutSelected && !isHairColorSelected && !isHairStyleSelected) {
+  //     setShowServiceError(true);
+  //   }
+  // };
+
   const handleHairCutToggle = () => {
-  if (isHairCutSelected === false) {
-    setIsHairCutSelected(true);
-    setShowServiceError(false);
-  }
-  else if (isHairCutSelected === true) {
-    setIsHairCutSelected(false);
-    setShowServiceError(true);
-  }
+    setIsHairCutSelected(!isHairCutSelected);
   };
 
   const handleHairColorToggle = () => {
-    if (isHairColorSelected === false) {
-      setIsHairColorSelected(true);
-      setShowServiceError(false);
-    }
-    else if (isHairColorSelected === true) {
-      setIsHairColorSelected(false);
-      setShowServiceError(true);
-    }
+    setIsHairColorSelected(!isHairColorSelected);
   };
 
   const handleHairStyleToggle = () => {
-    if (isHairStyleSelected === false) {
-      setIsHairStyleSelected(true);
+    setIsHairStyleSelected(!isHairStyleSelected);
+  };
+  
+// To Keep track of all 3 states so when there are none selected show service error at bottom
+  useEffect(() => {
+    if (!isHairCutSelected && !isHairColorSelected && !isHairStyleSelected) {
+      setShowServiceError(true);
+    } else {
       setShowServiceError(false);
     }
-    else if (isHairStyleSelected === true) {
-      setIsHairStyleSelected(false);
-      setShowServiceError(true);
-    }
-  };
+  }, [isHairCutSelected, isHairColorSelected, isHairStyleSelected]);
 
 
   const handlePrevMonth = () => {
@@ -153,6 +188,7 @@ const Calendar: React.FC<Props> = (props) => {
     // do something with the date here
     setSelectedDay(selectedDay ? selectedDay : "");
     setSelectedDate(date);
+    setSelectedYear(`${date.toLocaleString('default', { month: 'long', year: 'numeric' })}`);
     setShowDayError(false);
   };
 
@@ -203,7 +239,7 @@ const Calendar: React.FC<Props> = (props) => {
           key={`current-day-${i}`}
           className={`day ${className} ${isSelected ? 'green' : ''}`}
           onClick={onClickHandler}
-          style={isCurrentDay ? { backgroundColor: 'orange' } : isSelected ? { backgroundColor: '#c7ecc5' } : {}}
+          style={isCurrentDay ? { backgroundColor: 'rgb(238, 170, 125)', color: '#1f2937' } : isSelected ? { backgroundColor: '#c7ecc5' } : {}}
         >
           {i}
         </div>
@@ -244,7 +280,32 @@ const handleBookAppointment = () => {
   if (!isHairCutSelected && !isHairColorSelected && !isHairStyleSelected) {
     setShowServiceError(true);
   }
+  else {
+    handleCreateAppt();
+  }
 };
+
+const mutation = trpc.appointment.createAppt.useMutation();
+  const handleCreateAppt = async () => {
+    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+const formattedDate = selectedDate?.toLocaleDateString('en-US', options);
+    mutation.mutate({
+      service: `${isHairCutSelected ? `Hair-Cut,` : ``}${isHairColorSelected ? `Hair-Color,` : ``}${isHairStyleSelected ? `Hair-Style` : ``}`, 
+      apptTime: `${formattedDate} at ${selectedTimeSlot}`, 
+      firstName: `${checker.data?.firstName}`, 
+      lastName: `${checker.data?.lastName}`, 
+      phoneNumber: `${checker.data?.phoneNumber}`, 
+      confirmationStatus: "Unconfirmed"});
+      console.log("Successfully Created a New Appointment!");
+
+      // const currentTime = new Date();
+      // console.log(`Current time in Military time: 
+      // ${currentTime.getHours()}:
+      // ${currentTime.getMinutes()}:
+      // ${currentTime.getSeconds()}  
+      // Extra: ${currentTime.getUTCDate()}`);
+
+  };
 
 return (
 <CalendarContainer>
@@ -298,8 +359,8 @@ return (
      <div className="parent-div">
         <div className="child-div">
           <button
-            id="1pm"
-            className={`btn bg-orange-400 ${selectedTimeSlot === '1pm' ? 'selected' : ''}`}
+            id="1:00 p.m."
+            className={`btn bg-orange-400 ${selectedTimeSlot === '1:00 p.m.' ? 'selected' : ''}`}
             onClick={() => handleTimeSlotClick('1:00 p.m.')}
           >
             1:00 p.m.
@@ -307,8 +368,8 @@ return (
         </div>
         <div className="child-div">
           <button
-            id="4pm"
-            className={`btn bg-orange-400 ${selectedTimeSlot === '4pm' ? 'selected' : ''}`}
+            id="4:00 p.m."
+            className={`btn bg-orange-400 ${selectedTimeSlot === '4:00 p.m.' ? 'selected' : ''}`}
             onClick={() => handleTimeSlotClick('4:00 p.m.')}
           >
             4:00 p.m.
@@ -316,8 +377,8 @@ return (
         </div>
         <div className="child-div">
           <button
-            id="7pm"
-            className={`btn bg-orange-400 ${selectedTimeSlot === '7pm' ? 'selected' : ''}`}
+            id="7:00 p.m."
+            className={`btn bg-orange-400 ${selectedTimeSlot === '7:00 p.m.' ? 'selected' : ''}`}
             onClick={() => handleTimeSlotClick('7:00 p.m.')}
           >
             7:00 p.m.
@@ -340,9 +401,27 @@ return (
       <div className="child-div"></div>
       <div className="child-div  mr-8">
       {isAppointmentReady() ? (
-              <button id="bookAppointment" className="btn bg-orange-400" onClick={handleBookAppointment}>
+             <>
+             <button id="bookAppointment" disabled={mutation.isLoading} className="btn bg-orange-400" onClick={handleBookAppointment}>
                 Book Appointment
               </button>
+              <div>
+        {mutation.isLoading ? (
+          <p>creating appointment...</p>
+        ) : (
+          <>
+            {
+              mutation.isError ? (
+                <div> an error ocurred: {mutation.error.message}</div>
+              ) : null 
+            }
+
+            {mutation.isSuccess ? <div className='float-right'> appointment created!</div> : null}
+          </>
+        )}
+        </div>
+              </>
+              
             ) : (
               <button id="bookAppointment" className="btn bg-orange-400" disabled>
                 Book Appointment
